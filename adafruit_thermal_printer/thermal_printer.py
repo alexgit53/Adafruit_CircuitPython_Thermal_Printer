@@ -365,7 +365,7 @@ class ThermalPrinter:
     def _print_bitmap_easy(self, width, height, data):
         """Easy bitmap print, where the data is expected to be tightly formatted
         """
-        if not width // 8 == 0:
+        if not width % 8 == 0:
             raise ValueError("Width must be divisible by 8 - whole number of bytes.")
         if not len(data) == (width * height / 8):
             raise ValueError("Data is not correct size for given dimensions.")
