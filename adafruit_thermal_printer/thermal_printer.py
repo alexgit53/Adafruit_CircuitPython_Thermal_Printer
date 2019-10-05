@@ -356,10 +356,25 @@ class ThermalPrinter:
                     # Drop down to low level UART access to avoid newline and
                     # other bitmap values being misinterpreted.
                     self._wait_timeout()
-                    self._uart.write(data[i])
+                    self._uart.write(chr(data[i]))
                     i += 1
                 i += row_bytes - row_bytes_clipped
             self._set_timeout(chunk_height * self._dot_print_s)
+        self._column = 0
+
+    def _print_bitmap_easy(self, width, height, data):
+        """Easy bitmap print, where the data is expected to be tightly formatted
+        """
+        if not width // 8 == 0:
+            raise ValueError("Width must be divisible by 8 - whole number of bytes.")
+        if not len(data) == (width * height / 8):
+            raise ValueError("Data is not correct size for given dimensions.")
+
+        self.send_command('\x12*{0}{1}'.format(chr(height),
+                                               chr(width)))
+        self._wait_timeout()
+        self._uart.write(data)
+        self._set_timeout(height * self._dot_print_s)
         self._column = 0
 
     def test_page(self):
