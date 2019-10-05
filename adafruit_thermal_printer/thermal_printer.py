@@ -356,7 +356,7 @@ class ThermalPrinter:
                     # Drop down to low level UART access to avoid newline and
                     # other bitmap values being misinterpreted.
                     self._wait_timeout()
-                    self._uart.write(chr(data[i]))
+                    self._uart.write(data[i])
                     i += 1
                 i += row_bytes - row_bytes_clipped
             self._set_timeout(chunk_height * self._dot_print_s)
