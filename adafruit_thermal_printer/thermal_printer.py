@@ -370,12 +370,10 @@ class ThermalPrinter:
         if not len(data) == (width * height / 8):
             raise ValueError("Data is not correct size for given dimensions.")
 
-        self.send_command('\x12*{0}{1}'.format(chr(height),
-                                               chr(width)))
-        self._wait_timeout()
-        self._uart.write(data)
-        self._set_timeout(height * self._dot_print_s)
-        self._column = 0
+        command = '\x12*{0}{1}{2}'.format(chr(height), chr(width), data.decode("ascii"))
+        self.send_command(command)
+
+
 
     def test_page(self):
         """Print a test page."""
